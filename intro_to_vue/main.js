@@ -104,7 +104,7 @@ Vue.component('product', {
     methods: {
         // ----------- anonymous functions
         addToCart: function () { 
-            this.$emit('add-to-cart') // emit and event to parent, the event is named 'add-to-cart'
+            this.$emit('add-to-cart', this.variants[this.selectedVariant].variantID) // emit and event to parent, the event is named 'add-to-cart'
         },
         updateProduct(index) {  // ES6 format
             this.selectedVariant = index
@@ -135,11 +135,11 @@ var app = new Vue({
     el: '#app',
     data:{
         premium: true,
-        cart: 0
+        cart: []
     },
     methods: {
-        updateCart() {
-            this.cart +=1  // refers to cart in the data
+        updateCart(id) {
+            this.cart.push(id)  // refers to cart in the data
         }
     }
 
