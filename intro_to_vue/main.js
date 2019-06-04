@@ -1,4 +1,10 @@
 Vue.component('product', {
+    props: {
+        premium: {
+            type: Boolean,
+            required: true
+        }
+    },
     template: `
     <div class="product">
 
@@ -10,6 +16,7 @@ Vue.component('product', {
         <h1>{{ title }}</h1> <!-- also works with {{brand}}{{product}}-->
         <p v-if="inStock">In Stock</p>
         <p v-else>Out of Stock</p>
+        <p>Shipping: {{ shipping }}</p>
         <!-- <p v-if="inventory >10">In Stock</p>
         <p v-else-if="inventory <=10 && inventory > 0 ">Almost sold out!</p>
         <p v-else>Out of Stock</p> -->
@@ -117,6 +124,12 @@ Vue.component('product', {
         },
         inStock() {
             return this.variants[this.selectedVariant].variantQuantity
+        },
+        shipping() {
+            if (this.premium) {
+                return "Free"
+            } else
+            return "$100"
         }
     }
 
@@ -124,5 +137,8 @@ Vue.component('product', {
 
 var app = new Vue({
     el: '#app',
+    data:{
+        premium: true
+    }
 
 })
