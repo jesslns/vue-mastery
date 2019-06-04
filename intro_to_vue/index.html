@@ -15,7 +15,7 @@
         </div>
 
         <div class="product-info">
-            <h1>{{ product }}</h1>
+            <h1>{{ title }}</h1> <!-- also works with {{brand}}{{product}}-->
             <p v-if="inStock">In Stock</p>
             <p v-else>Out of Stock</p>
             <!-- <p v-if="inventory >10">In Stock</p>
@@ -26,11 +26,12 @@
                 <li v-for="detail in details">{{ detail }}</li>
             </ul>
 
-            <div v-for="variant in variants" 
+            <!-- use index of each variant object within variants, instead of v-for="variant in variants" -->
+            <div v-for="(variant, index) in variants" 
                     :key="variant.variantID"
                     class="color-box"
                     :style="{ backgroundColor: variant.variantColour }" 
-                    @mouseover="updateProduct(variant.variantImage)">
+                    @mouseover="updateProduct(index)">
 
                 <!-- backgroundColor (or can be replaced using CSS syntax with quotation 'background-color') 
                     is the CSS property to be added, other example include fontSize/ 'font-size'.
