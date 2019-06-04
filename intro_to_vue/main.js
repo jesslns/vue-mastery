@@ -66,9 +66,6 @@ Vue.component('product', {
                 
         <!-- disabledButton will be added when inStock is false, dynamically adding class to div -->
 
-        <div class="cart">
-            <p>Cart({{cart}})</p>
-        </div>
 
     </div>
 
@@ -91,7 +88,7 @@ Vue.component('product', {
                     variantID: 2234,
                     variantColour: "green",
                     variantImage: "./assets/vmSocks-green-onWhite.jpg",
-                    variantQuantity: 0
+                    variantQuantity: 1
                 },
                 {
                     variantID: 2235,
@@ -101,14 +98,13 @@ Vue.component('product', {
                 }
             ],
 
-            cart: 0
         }
     }, 
 
     methods: {
         // ----------- anonymous functions
         addToCart: function () { 
-            this.cart +=1  // refers to cart in the data
+            this.$emit('add-to-cart') // emit and event to parent, the event is named 'add-to-cart'
         },
         updateProduct(index) {  // ES6 format
             this.selectedVariant = index
@@ -138,7 +134,13 @@ Vue.component('product', {
 var app = new Vue({
     el: '#app',
     data:{
-        premium: true
+        premium: true,
+        cart: 0
+    },
+    methods: {
+        updateCart() {
+            this.cart +=1  // refers to cart in the data
+        }
     }
 
 })

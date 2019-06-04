@@ -7,7 +7,11 @@
 <div class="nav-bar"></div> 
 
 <div id="app">
-    <product :premium="premium"></product> <!--:premium must have the same name as the props object-->
+        <div class="cart">
+            <p>Cart({{cart}})</p>
+        </div>
+    <product :premium="premium"
+            @add-to-cart="updateCart"></product> <!--:premium must have the same name as the props object-->
 </div>
 
 <script src="https://cdn.jsdelivr.net/npm/vue@2.5.13/dist/vue.js"></script>
