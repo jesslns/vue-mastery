@@ -7,75 +7,9 @@
 <div class="nav-bar"></div> 
 
 <div id="app">
-
-    <div class="product">
-
-        <div class="product-image">
-            <img v-bind:src="image" />
-        </div>
-
-        <div class="product-info">
-            <h1>{{ title }}</h1> <!-- also works with {{brand}}{{product}}-->
-            <p v-if="inStock">In Stock</p>
-            <p v-else>Out of Stock</p>
-            <!-- <p v-if="inventory >10">In Stock</p>
-            <p v-else-if="inventory <=10 && inventory > 0 ">Almost sold out!</p>
-            <p v-else>Out of Stock</p> -->
-
-            <ul>
-                <li v-for="detail in details">{{ detail }}</li>
-            </ul>
-
-            <!-- use index of each variant object within variants, instead of v-for="variant in variants" -->
-            <div v-for="(variant, index) in variants" 
-                    :key="variant.variantID"
-                    class="color-box"
-                    :style="{ backgroundColor: variant.variantColour }" 
-                    @mouseover="updateProduct(index)">
-
-                <!-- backgroundColor (or can be replaced using CSS syntax with quotation 'background-color') 
-                    is the CSS property to be added, other example include fontSize/ 'font-size'.
-                    on the right variant.variantColour is referencing to the data -->
-                <!-- For clearner expression, bind style to say styleObject
-                    <p :style="styleObject">...</p>
-                    and declare 
-                    styleObject: {
-                        color: 'red',
-                        fontSize: '13px'
-                    } 
-                    in data in main.js
-
-                    similarly, for class
-                    <div :class="active">...</div>
-                    and declare 
-                    classObject: {
-                        active: true,
-                        'text-danger': false
-                    }
-                -->
-                <!-- <p @mouseover="updateProduct(variant.variantImage)">{{ variant.variantColour }}</p>  -->
-                <!--@ is a short-hand for v-on
-                    : is a short-hand for v-bind -->
-            </div>
-
-            <!-- <button v-on:click="cart +=1">Add to Cart</button>  -->
-            <!-- when function get more complicated it is better to seperate as a method -->
-            <button v-on:click="addToCart" 
-                    :disabled="!inStock"
-                    :class="{ disabledButton: !inStock }" 
-                    >Add to Cart</button>          
-                    
-            <!-- disabledButton will be added when inStock is false, dynamically adding class to div -->
-
-            <div class="cart">
-                <p>Cart({{cart}})</p>
-            </div>
-
-        </div>
-
-    </div>
-
+    <product></product>
 </div>
+
 <script src="https://cdn.jsdelivr.net/npm/vue@2.5.13/dist/vue.js"></script>
 <script src="main.js"></script>
 <script src="./assets/style.css"></script>
