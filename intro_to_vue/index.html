@@ -26,14 +26,45 @@
                 <li v-for="detail in details">{{ detail }}</li>
             </ul>
 
-            <div v-for="variant in variants" :key="variant.variantID">
-                <p @mouseover="updateProduct(variant.variantImage)">{{ variant.variantColour }}</p> 
-                <!--@ is a short-hand for v-on-->
+            <div v-for="variant in variants" 
+                    :key="variant.variantID"
+                    class="color-box"
+                    :style="{ backgroundColor: variant.variantColour }" 
+                    @mouseover="updateProduct(variant.variantImage)">
+
+                <!-- backgroundColor (or can be replaced using CSS syntax with quotation 'background-color') 
+                    is the CSS property to be added, other example include fontSize/ 'font-size'.
+                    on the right variant.variantColour is referencing to the data -->
+                <!-- For clearner expression, bind style to say styleObject
+                    <p :style="styleObject">...</p>
+                    and declare 
+                    styleObject: {
+                        color: 'red',
+                        fontSize: '13px'
+                    } 
+                    in data in main.js
+
+                    similarly, for class
+                    <div :class="active">...</div>
+                    and declare 
+                    classObject: {
+                        active: true,
+                        'text-danger': false
+                    }
+                -->
+                <!-- <p @mouseover="updateProduct(variant.variantImage)">{{ variant.variantColour }}</p>  -->
+                <!--@ is a short-hand for v-on
+                    : is a short-hand for v-bind -->
             </div>
 
             <!-- <button v-on:click="cart +=1">Add to Cart</button>  -->
             <!-- when function get more complicated it is better to seperate as a method -->
-            <button v-on:click="addToCart">Add to Cart</button>            
+            <button v-on:click="addToCart" 
+                    :disabled="!inStock"
+                    :class="{ disabledButton: !inStock }" 
+                    >Add to Cart</button>          
+                    
+            <!-- disabledButton will be added when inStock is false, dynamically adding class to div -->
 
             <div class="cart">
                 <p>Cart({{cart}})</p>
