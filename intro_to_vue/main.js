@@ -1,3 +1,6 @@
+// ---------- a global channel that listen to events ----
+var eventBus = new Vue()
+
 Vue.component('product', {
     props: {
         premium: {
@@ -68,21 +71,9 @@ Vue.component('product', {
 
         </div>
 
-        <div>
-            <h2>Reviews</h2>
-            <p v-if="!reviews.length">There are no reviews yet.</p>
-            <ul>
-                <li v-for="review in reviews">
-                <p>{{ review.name }}</p>
-                <p>Rating: {{ review.rating }}</p>
-                <p>{{ review.review }}</p>
-                </li>
-            </ul>
-        </div>
+        <product-tabs :reviews="reviews"></product-tabs> 
 
-        <product-review @review-submitted="addReview"></product-review> <!-- nesting product-review -->
-
-    
+  
     </div>
     `,
 
@@ -114,7 +105,7 @@ Vue.component('product', {
     },
 
     methods: {
-        // ----------- anonymous functions in 'product' component ---------------------------------
+        // anonymous functions:
         addToCart: function () {
             this.$emit('add-to-cart', this.variants[this.selectedVariant].variantID) // emit and event to parent, the event is named 'add-to-cart'
         },
@@ -122,9 +113,6 @@ Vue.component('product', {
             this.selectedVariant = index
             console.log(index)
         },
-        addReview(productReview) {
-            this.reviews.push(productReview)
-        }
     },
     computed: {
         title() {
@@ -142,6 +130,11 @@ Vue.component('product', {
             } else
                 return "$100"
         }
+    },
+    mounted() {
+        eventBus.$on('review-submitted', productReview => {
+            this.reviews.push(productReview)
+        })
     }
 
 });
@@ -201,7 +194,7 @@ Vue.component('product-review', {
                     rating: this.rating
                 }
                 // post this object to parent
-                this.$emit('review-submitted', productReview) // then go back to where the <product-review> is nested to receive the emit event
+                eventBus.$emit('review-submitted', productReview) // then go back to where the <product-review> is nested to receive the emit event
                 // reset the values after submitting the form, form values are stored in the prodictReview object
                 this.name = null
                 this.review = null
@@ -215,7 +208,53 @@ Vue.component('product-review', {
          }
     }
 })
-// -----------------------------end of 'product-review' component ---------------------------------------
+// ----------------------------- end of 'product-review' component ---------------------------------------
+
+// ----------------------------- start of 'product-tabs' component --------------------------------
+
+Vue.component('product-tabs', {
+    props: {
+        reviews: {
+            type: Array,
+            required: true
+        }
+    },
+    template: `
+    <div>
+        <span class="tab"
+                :class="{ activeTab: selectedTab === tab}"
+                v-for="(tab, index) in tabs" 
+                :key="index"
+                @click="selectedTab = tab">
+                {{ tab }}</span>
+
+        <div v-show="selectedTab === 'Reviews'">
+            <p v-if="!reviews.length">There are no reviews yet.</p>
+            <ul>
+                <li v-for="review in reviews">
+                <p>{{ review.name }}</p>
+                <p>Rating: {{ review.rating }}</p>
+                <p>{{ review.review }}</p>
+                </li>
+            </ul>
+        </div>
+
+        <product-review v-show="selectedTab === 'Make a Review'"></product-review> 
+                
+    </div>
+
+
+    `,
+    data() {
+        return {
+            tabs: ['Reviews', 'Make a Review'],
+            selectedTab: 'Reviews'
+        }
+    }
+})
+
+// ----------------------------- end of 'product-tabs' component ----------------------------------
+
 var app = new Vue({
     el: '#app',
     data: {
