@@ -152,6 +152,14 @@ Vue.component('product-review', {
     <form class="review-form" @submit.prevent="onSubmit"> 
     <!--event listener with a prevent modifier to prevent the default behaviour, i.e. the page wont refresh when form is submitted 
         action can be posting to an external API-->
+
+    <p v-if="errors.length">
+        <b>Please correct the following error(s):</b>
+        <ul>
+            <li v-for="error in errors">{{ error }}</li>
+        </ul>
+    </p>
+
     <p>
         <label for="name">Name:</label>
         <input id="name" v-model="name">
@@ -179,24 +187,32 @@ Vue.component('product-review', {
         return {
             name: null, // name data is updated by v-model
             review: null,
-            rating: null
+            rating: null,
+            errors: []
         }
     },
     methods: {
         
         onSubmit() {
-            let productReview = { // create an object when click submit
-                name: this.name, // name from this data
-                review: this.review,
-                rating: this.rating
+            if (this.name && this.review && this.rating) { // Execute onSubmit only when all fields are filled-in
+                let productReview = { // create an object when click submit
+                    name: this.name, // name from this data
+                    review: this.review,
+                    rating: this.rating
+                }
+                // post this object to parent
+                this.$emit('review-submitted', productReview) // then go back to where the <product-review> is nested to receive the emit event
+                // reset the values after submitting the form, form values are stored in the prodictReview object
+                this.name = null
+                this.review = null
+                this.rating = null
             }
-            // post this object to parent
-            this.$emit('review-submitted', productReview) // then go back to where the <product-review> is nested to receive the emit event
-            // reset the values after submitting the form, form values are stored in the prodictReview object
-            this.name = null
-            this.review = null
-            this.rating = null
-        }
+            else {
+                if(!this.name) this.errors.push("Name required.")
+                if(!this.review) this.errors.push("Write your review.")
+                if(!this.rate) this.errors.push("Rate the product.")
+            }
+         }
     }
 })
 // -----------------------------end of 'product-review' component ---------------------------------------
