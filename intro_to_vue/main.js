@@ -66,7 +66,18 @@ Vue.component('product', {
                     
             <!-- disabledButton will be added when inStock is false, dynamically adding class to div -->
 
+        </div>
 
+        <div>
+            <h2>Reviews</h2>
+            <p v-if="!reviews.length">There are no reviews yet.</p>
+            <ul>
+                <li v-for="review in reviews">
+                <p>{{ review.name }}</p>
+                <p>Rating: {{ review.rating }}</p>
+                <p>{{ review.review }}</p>
+                </li>
+            </ul>
         </div>
 
         <product-review @review-submitted="addReview"></product-review> <!-- nesting product-review -->
@@ -103,7 +114,7 @@ Vue.component('product', {
     },
 
     methods: {
-        // ----------- anonymous functions
+        // ----------- anonymous functions in 'product' component ---------------------------------
         addToCart: function () {
             this.$emit('add-to-cart', this.variants[this.selectedVariant].variantID) // emit and event to parent, the event is named 'add-to-cart'
         },
@@ -135,6 +146,7 @@ Vue.component('product', {
 
 });
 
+// ------ start of 'product-review' component (nested in 'product' component) -------------------
 Vue.component('product-review', {
     template: `
     <form class="review-form" @submit.prevent="onSubmit"> 
@@ -171,6 +183,7 @@ Vue.component('product-review', {
         }
     },
     methods: {
+        
         onSubmit() {
             let productReview = { // create an object when click submit
                 name: this.name, // name from this data
@@ -186,7 +199,7 @@ Vue.component('product-review', {
         }
     }
 })
-
+// -----------------------------end of 'product-review' component ---------------------------------------
 var app = new Vue({
     el: '#app',
     data: {
